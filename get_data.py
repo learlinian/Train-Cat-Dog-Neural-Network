@@ -65,7 +65,7 @@ if __name__ == "__main__":
     X_train = np.array(X_train).reshape(-1, IMG_SIZE, IMG_SIZE, 1)
     X_test = np.array(X_test).reshape(-1, IMG_SIZE, IMG_SIZE, 1)
 
-    # generate training data
+    # generate training and testing data
     pickle_out = open("X_train.pickle", "wb")
     pickle.dump(X_train, pickle_out)
     pickle_out.close()
