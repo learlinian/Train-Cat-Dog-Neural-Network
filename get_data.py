@@ -5,6 +5,7 @@ import pickle
 import numpy as np
 
 
+# transform images into matrix format
 def get_training_data():
     global DATADIR
     global CATEGORIES
