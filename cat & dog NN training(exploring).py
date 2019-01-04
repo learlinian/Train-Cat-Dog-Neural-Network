@@ -1,7 +1,7 @@
 import tensorflow as tf
 from tensorflow.keras.models import Sequential
-from tensorflow.keras.layers import Dense, Dropout, Activation, Flatten, Conv2D, MaxPooling2D, BatchNormalization
-from tensorflow.keras.callbacks import TensorBoard, ReduceLROnPlateau, EarlyStopping
+from tensorflow.keras.layers import Dense, Dropout, Activation, Flatten, Conv2D, MaxPooling2D
+from tensorflow.keras.callbacks import TensorBoard
 import tensorflow.keras.backend as K
 import time
 import pickle
@@ -28,15 +28,12 @@ for conv_layer in conv_layers:
                     # set the name for the NN model
                     NAME = '{}-conv-{}-nodes-{}-dense-{}'.format(conv_layer, layer_size, dense_layer, int(time.time()))
                     # set up callbacks
-                    callbacks = [TensorBoard(log_dir='log_temp/{}'.format(NAME)),
-                                 ReduceLROnPlateau(monitor='val_loss', factor=0.2, patience=5),
-                                 EarlyStopping(monitor='val_acc', mode='min', patience=15)]
+                    callbacks = [TensorBoard(log_dir='log_exploring/{}'.format(NAME))]
 
                     model = Sequential()    # Initialize model as a sequential model
 
                     # Feed training data into a convolutional layer first
                     model.add(Conv2D(layer_size, (5, 5), input_shape=X_train.shape[1:]))  # Specify input shape, otherwise model cannot be saved 
-                    model.add(BatchNormalization())
                     model.add(Activation('relu'))
                     model.add(MaxPooling2D(pool_size=(2, 2)))
                     model.add(Dropout(rate=0.25))
@@ -44,7 +41,6 @@ for conv_layer in conv_layers:
                     # convolutional layer loop
                     for i in range(conv_layer-1):
                         model.add(Conv2D(layer_size, (5, 5)))
-                        model.add(BatchNormalization())
                         model.add(Activation('relu'))
                         model.add(MaxPooling2D(pool_size=(2, 2)))
                         model.add(Dropout(rate=0.25))
@@ -54,12 +50,10 @@ for conv_layer in conv_layers:
                     # dense layer loop
                     for i in range(dense_layer):
                         model.add(Dense(layer_size))
-                        model.add(BatchNormalization())
                         model.add(Activation('relu'))
                         model.add(Dropout(rate=0.25))
 
                     model.add(Dense(1))
-                    # model.add(BatchNormalization())
                     model.add(Activation('sigmoid'))    # Use sigmoid activation function in output layer for binary training
 
                     model.compile(loss='binary_crossentropy', optimizer='adam', metrics=['accuracy'])
