@@ -9,7 +9,7 @@ for conv_layer in conv_layers:
                     # set the name for the NN model
                     NAME = '{}-conv-{}-nodes-{}-dense-{}'.format(conv_layer, layer_size, dense_layer, int(time.time()))
                     # set up callbacks
-                    callbacks = [TensorBoard(log_dir='Intermediate Level/{}'.format(NAME)),
+                    callbacks = [TensorBoard(log_dir='log_intermediate/{}'.format(NAME)),
                                  ReduceLROnPlateau(monitor='val_loss', factor=0.2, patience=5),
                                  EarlyStopping(monitor='val_acc', mode='min', patience=15)]
 
